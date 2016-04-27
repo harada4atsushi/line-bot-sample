@@ -5,6 +5,8 @@ require 'line/bot/client'
 
 Dotenv.load
 
+CONTENT_TYPE_TEXT = 1
+
 get '/' do
   'hoge'
 end
@@ -18,37 +20,16 @@ post '/' do
   end
 
   params = JSON.parse(request.body.read)
-  puts params
   params['result'].each do |message|
-    puts '------------------------------------------------------'
+    next unless message['content']['contentType'] == CONTENT_TYPE_TEXT
+    text = message['content']['text']
+    puts "text: #{text}"
+    next text =~ /^[\d +-\/*]*$/  # 数式以外は処理しない
+
     line_user_id = message['content']['from']
-    puts "line_user_id: #{line_user_id}"
-    response = client.send_text([line_user_id], text: "Hello LINE!")
+    response = client.send_text([line_user_id], text: eval(text))
     puts response
   end
 
   'OK'
-
-  #params = JSON.parse(request.body.read)
-  #
-  # params['result'].each do |msg|
-  #   request_content = {
-  #     to: [msg['content']['from']],
-  #     toChannel: 1383378250, # Fixed  value
-  #     eventType: "138311608800106203", # Fixed value
-  #     content: msg['content']
-  #   }
-  #
-  # endpoint = 'https://trialbot-api.line.me/v1/events'
-  #
-  #   RestClient.proxy = ENV["FIXIE_URL"]
-  #   RestClient.post(endpoint_uri, content_json, {
-  #     'Content-Type' => 'application/json; charset=UTF-8',
-  #     'X-Line-ChannelID' => ENV["LINE_CHANNEL_ID"],
-  #     'X-Line-ChannelSecret' => ENV["LINE_CHANNEL_SECRET"],
-  #     'X-Line-Trusted-User-With-ACL' => ENV["LINE_CHANNEL_MID"],
-  #   })
-  # end
-  #
-  # "OK"
 end
