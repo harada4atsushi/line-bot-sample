@@ -24,10 +24,14 @@ post '/' do
     next unless message['content']['contentType'] == CONTENT_TYPE_TEXT
     text = message['content']['text']
     puts "text: #{text}"
-    next text =~ /^[\d +-\/*]*$/  # 数式以外は処理しない
-
     line_user_id = message['content']['from']
-    response = client.send_text([line_user_id], text: eval(text))
+
+    if text =~ /^[\d +-\/*]*$/  # 数式形式
+      response = client.send_text([line_user_id], text: eval(text))
+    else
+      response = client.send_text([line_user_id], text: '数式で入力しろよ'
+    end
+
     puts response
   end
 
