@@ -29,7 +29,7 @@ post '/' do
     if text =~ /^[\d +-\/*]*$/  # 数式形式
       response = client.send_text([line_user_id], text: eval(text))
     else
-      response = client.send_text([line_user_id], text: '数式で入力しろよ'
+      response = client.send_text([line_user_id], text: '数式で入力しろよ')
     end
 
     puts response
