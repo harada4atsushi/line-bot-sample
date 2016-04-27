@@ -1,5 +1,6 @@
 require 'dotenv'
 require 'sinatra'
+require 'json'
 require 'line/bot/client'
 
 Dotenv.load
@@ -18,6 +19,7 @@ post '/' do
   params = JSON.parse(request.body.read)
   params['result'].each do |message|
     line_user_id = message['content']['from']
+    puts "line_user_id: #{line_user_id}"
   end
 
   client.send_text([line_user_id], text: "Hello LINE!")
