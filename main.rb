@@ -17,12 +17,14 @@ post '/' do
   end
 
   params = JSON.parse(request.body.read)
+  puts params
   params['result'].each do |message|
+    puts '------------------------------------------------------'
     line_user_id = message['content']['from']
     puts "line_user_id: #{line_user_id}"
+    client.send_text([line_user_id], text: "Hello LINE!")
   end
 
-  client.send_text([line_user_id], text: "Hello LINE!")
 
 
   #params = JSON.parse(request.body.read)
