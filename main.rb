@@ -37,3 +37,7 @@ post '/' do
 
   'OK'
 end
+
+get '/facebook_verify' do
+  ENV['FABOOK_VERIFY']
+end
